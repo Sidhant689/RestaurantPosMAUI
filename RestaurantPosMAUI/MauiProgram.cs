@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using RestaurantPosMAUI.Pages;
+using RestaurantPosMAUI.Services;
+using RestaurantPosMAUI.ViewModels;
 
 namespace RestaurantPosMAUI
 {
@@ -15,9 +18,8 @@ namespace RestaurantPosMAUI
                     fonts.AddFont("Poppins-Regular.ttf", "PoppinsRegular");
                     fonts.AddFont("Poppins-Bold.ttf", "PoppinsBold");
                 });
-
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
             return builder.Build();
         }

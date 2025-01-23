@@ -75,5 +75,11 @@ namespace RestaurantPosMAUI.Application.Services
                 return (hashedPassword, passwordSalt);
             }
         }
+
+        public async Task<UserDto> GetUserByIdAsync(int id)
+        {
+            var user = await _unitOfWork.Users.GetByIdAsync(id);
+            return _mapper.Map<UserDto>(user);
+        }
     }
 }

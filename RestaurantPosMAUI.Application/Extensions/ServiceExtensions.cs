@@ -2,7 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RestaurantPosMAUI.Application.Auth;
+using RestaurantPosMAUI.Application.Interfaces;
+using RestaurantPosMAUI.Application.Services;
 using RestaurantPosMAUI.Infrastructure;
+using RestaurantPosMAUI.Infrastructure.UnitofWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +24,15 @@ namespace RestaurantPosMAUI.Application.Extensions
             // configure automapper
             services.AddAutoMapper(typeof(AutomapperProfile).Assembly);
 
+            // Register UnitOfWork
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             // Add JWT Service
             services.AddScoped<IJwtService,JwtService>();
 
             //Add Services
-
+            services.AddScoped<IUserService,UserService>();
+            services.AddScoped<IMenuCategoryService,MenuCategoryservice>();
         }
     }
 }

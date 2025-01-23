@@ -19,12 +19,24 @@ namespace RestaurantPosMAUI.Infrastructure.UnitofWork
         public IAuditLogRepository AuditLogs { get; }
         public IUserRepository UserRepository { get; }
 
+        public IRepository<MenuCategory> MenuCategories { get; }
+        public IMenuCategoryRepository MenuCategoryRepository { get; }
+
+        public IRepository<MenuItem> MenuItems { get; }
+        public IMenuItemsRepository MenuItemsRepository { get; }
+
         public UnitOfWork(AppDBContext context)
         {
             _context = context;
             Users = new Repository<User>(context);
             AuditLogs = new AuditLogRepository(context);
             UserRepository = new UserRepository(context);
+
+            MenuCategories = new MenuCategoryRepository(context);
+            MenuCategoryRepository = new MenuCategoryRepository(context);
+
+            MenuItems = new MenuItemrepository(context);
+            MenuItemsRepository = new MenuItemrepository(context);
         }
 
         public async Task<int> SaveChangesAsync()

@@ -34,7 +34,7 @@ namespace RestaurantPosMAUI.API.Controllers
         [Route("api/GetUserByIdAsync")]
         public async Task<ActionResult<UserDto>> GetUserById(int id)
         {
-            var user = "sfsff";// await _userService.GetUserByIdAsync(id);
+            var user = await _userService.GetUserByIdAsync(id);
             if (user == null)
             {
                 return NotFound();

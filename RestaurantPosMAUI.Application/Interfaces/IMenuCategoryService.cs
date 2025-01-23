@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace RestaurantPosMAUI.Application.Interfaces
 {
-    public interface IUserService
+    public interface IMenuCategoryService
     {
-        Task<UserDto> CreateUserAsync(UserDto createUserDto);
-        Task<UserDto> GetUserByIdAsync(int id);
+        Task<IEnumerable<MenuCategoryDTO>> GetAllMenuCategoryasync();
     }
 }
