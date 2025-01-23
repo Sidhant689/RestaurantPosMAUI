@@ -1,30 +1,22 @@
-﻿
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RestaurantPosMAUI.Models;
 using RestaurantPosMAUI.Services;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RestaurantPosMAUI.ViewModels
 {
-    public class HomeViewModel : BaseViewModel
+    public partial class HomeViewModel : ObservableObject
     {
         private readonly MenuCategoryService _menuCategoryService;
-        private ObservableCollection<MenuCategory> _menuCategories;
 
-        private MenuCategory? SelectedCategory = null;
+        [ObservableProperty]
+        private ObservableCollection<MenuCategory> menuCategories;
 
-        public ObservableCollection<MenuCategory> MenuCategories
-        {
-            get => _menuCategories;
-            set
-            {
-                _menuCategories = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
+        private MenuCategory? selectedCategory;
 
         public HomeViewModel()
         {
@@ -43,63 +35,33 @@ namespace RestaurantPosMAUI.ViewModels
                     MenuCategories.Add(category);
                 }
 
-                MenuCategories[0].IsSelected = true;
-                SelectedCategory = MenuCategories[0];
+                // Select first category
+                if (MenuCategories.Any())
+                {
+                    SelectCategory(MenuCategories[0].Id);
+                }
             }
         }
 
-        
+        [RelayCommand]
         private void SelectCategory(int categoryId)
         {
-            if(SelectedCategory.Id == categoryId)
+            // Deselect all categories
+            foreach (var category in MenuCategories)
             {
-                return;// the current category is already selected
+                category.IsSelected = false;
             }
 
-            var existingSelectedCategory = MenuCategories.First(c => c.Id == categoryId);
-            existingSelectedCategory.IsSelected = false;
+            // Find and select new category
+            var newSelectedCategory = MenuCategories.FirstOrDefault(c => c.Id == categoryId);
+            if (newSelectedCategory != null)
+            {
+                newSelectedCategory.IsSelected = true;
+                SelectedCategory = newSelectedCategory;
 
-            var newlySelectedCategory = MenuCategories.First(c => c.Id == categoryId);
-            newlySelectedCategory.IsSelected = true;
-
-            SelectedCategory = newlySelectedCategory;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                // Force UI update
+                OnPropertyChanged(nameof(MenuCategories));
+            }
         }
     }
-
-    //public class HomeViewModel : BaseViewModel
-    //{
-    //    private readonly MenuCategoryService _menuCategoryService;
-    //    private ObservableCollection<MenuCategory> _menuCategories = new();
-
-    //    public ObservableCollection<MenuCategory> MenuCategories
-    //    {
-    //        get => _menuCategories;
-    //        set => SetProperty(ref _menuCategories, value);
-    //    }
-
-    //    public ICommand LoadDataCommand { get; }
-
-    //    public HomeViewModel()
-    //    {
-    //        _menuCategoryService = new MenuCategoryService();
-    //        LoadDataCommand = new AsyncRelayCommand(LoadDataAsync);
-    //    }
-
-    //    private async Task LoadDataAsync()
-    //    {
-    //        var data = await _menuCategoryService.GetMenuCategoriesAsync();
-    //        if (data?.Any() == true)
-    //        {
-    //            MenuCategories = new ObservableCollection<MenuCategory>(data);
-    //        }
-    //    }
-    //}
-
 }

@@ -38,6 +38,11 @@
                                     <Setter Property="BackgroundColor" Value="Maroon"/>
                                 </DataTrigger>
                             </Border.Triggers>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=SelectCategoryCommand}"
+                                    CommandParameter="{Binding Id}"/>
+
+                            </Border.GestureRecognizers>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
