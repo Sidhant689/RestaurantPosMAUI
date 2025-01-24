@@ -9,5 +9,6 @@ namespace RestaurantPosMAUI.Infrastructure.InterfaceRepositories
 {
     public interface IMenuItemsRepository : IRepository<MenuItem>
     {
+        Task<IEnumerable<MenuItem>> GetMenuItemsByMenuCategoryIdAsync(int menuCategoryId);
     }
 }

@@ -5,63 +5,79 @@ using RestaurantPosMAUI.Services;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using MenuItem = RestaurantPosMAUI.Models.MenuItem;
 
 namespace RestaurantPosMAUI.ViewModels
 {
     public partial class HomeViewModel : ObservableObject
     {
         private readonly MenuCategoryService _menuCategoryService;
+        private readonly MenuItemService _menuItemService;
 
         [ObservableProperty]
-        private ObservableCollection<MenuCategory> menuCategories;
+        private MenuCategory[] categories = [];
 
         [ObservableProperty]
-        private MenuCategory? selectedCategory;
+        private MenuItem[] _menuItems = [];
+
+        [ObservableProperty]
+        private MenuCategory? _selectedCategory = null;
+
+        [ObservableProperty]
+        private bool _isLoading;
 
         public HomeViewModel()
         {
             _menuCategoryService = new MenuCategoryService();
-            MenuCategories = new ObservableCollection<MenuCategory>();
-            LoadDataAsync();
+            _menuItemService = new MenuItemService();
+            //InitializeAsync();
         }
 
-        private async Task LoadDataAsync()
-        {
-            var data = await _menuCategoryService.GetMenuCategoriesAsync();
-            if (data != null)
-            {
-                foreach (var category in data)
-                {
-                    MenuCategories.Add(category);
-                }
+        [ObservableProperty]
+        private bool _isInitialized;
 
-                // Select first category
-                if (MenuCategories.Any())
-                {
-                    SelectCategory(MenuCategories[0].Id);
-                }
-            }
+        public async ValueTask InitializeAsync()
+        {
+            if (_isInitialized) return;// Already Initialized
+
+            _isInitialized = true;
+
+            IsLoading = true;
+
+            Categories = await _menuCategoryService.GetMenuCategoriesAsync();
+
+            Categories[0].IsSelected = true;
+            
+            SelectedCategory = Categories[0];
+
+            MenuItems = await _menuItemService.GetMenuItemsBycategoryId(SelectedCategory.Id);
+
+            IsLoading = false;
+
         }
 
         [RelayCommand]
-        private void SelectCategory(int categoryId)
+        private async Task SelectCategoryAsync(int categoryId)
         {
-            // Deselect all categories
-            foreach (var category in MenuCategories)
-            {
-                category.IsSelected = false;
-            }
+            if (SelectedCategory.Id == categoryId)
+                return; // The current category is already selected
 
-            // Find and select new category
-            var newSelectedCategory = MenuCategories.FirstOrDefault(c => c.Id == categoryId);
-            if (newSelectedCategory != null)
-            {
-                newSelectedCategory.IsSelected = true;
-                SelectedCategory = newSelectedCategory;
+            IsLoading = true;
 
-                // Force UI update
-                OnPropertyChanged(nameof(MenuCategories));
-            }
+            var existingSelectedCategory = Categories.First(c => c.IsSelected);
+            existingSelectedCategory.IsSelected = false;
+
+            var newSelectedCategory = Categories.First(c=> c.Id == categoryId);
+            newSelectedCategory.IsSelected = true;
+
+            SelectedCategory = newSelectedCategory;
+
+            MenuItems = await _menuItemService.GetMenuItemsBycategoryId(SelectedCategory.Id);
+
+            IsLoading = false;
+
+            // Force UI update
+            //OnPropertyChanged(nameof(Categories));
         }
     }
 }

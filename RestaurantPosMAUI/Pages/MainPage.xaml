@@ -4,13 +4,19 @@
              x:Class="RestaurantPosMAUI.Pages.MainPage"
              xmlns:vm="clr-namespace:RestaurantPosMAUI.ViewModels"
              xmlns:model="clr-namespace:RestaurantPosMAUI.Models"
+             xmlns:controls="clr-namespace:RestaurantPosMAUI.Controls"
              x:DataType="vm:HomeViewModel"
              Shell.NavBarIsVisible="False">
 
     <Grid ColumnDefinitions="75*,25*">
-        <Grid Grid.Column="0" RowDefinitions="Auto, Auto,*" RowSpacing="10">
-            <Label Grid.Row="0" Text="Hello, Sidhant Here"/>
-            <CollectionView Grid.Row="1" ItemsSource="{Binding MenuCategories}" >
+        <Grid Grid.Column="0" RowDefinitions="Auto, Auto,*" RowSpacing="15" Padding="15">
+            
+            <Label Grid.Row="0" 
+                   Text="Hello, Sidhant Here"
+                   FontAttributes="Bold"
+                   FontSize="22"/>
+            
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Categories}" >
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
                 </CollectionView.ItemsLayout>
@@ -47,10 +53,73 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Label Grid.Row="2" Text="MenuItem List"/>
+
+            <Grid Grid.Row="2">
+
+                <CollectionView ItemsSource="{Binding MenuItems}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout 
+                            HorizontalItemSpacing="10" 
+                            Orientation="Vertical" 
+                            Span="4" 
+                            VerticalItemSpacing="10"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:MenuItem">
+                            <Border Padding="10" StrokeShape="RoundRectangle 10" Stroke="#DDD">
+                                <VerticalStackLayout Spacing="10">
+                                    <Border Background="Wheat" HeightRequest="150" StrokeThickness="0">
+                                        <Image
+                                            Source="{Binding Icon}"
+                                            WidthRequest="250"
+                                            MaximumHeightRequest="150"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            Aspect="Center"/>
+                                    </Border>
+                                    <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="20"/>
+                                    <Label Text="{Binding Description}" FontSize="12" TextColor="Gray"/>
+                                    <FlexLayout JustifyContent="SpaceBetween">
+                                        <Label 
+                                            Text="{Binding Price, StringFormat='{0:C}'}" 
+                                            FontSize="25" FontAttributes="Bold" 
+                                            TextColor="Maroon"/>
+                                        <ImageButton 
+                                            Source="shopping_bag_regular_24.png"
+                                            BackgroundColor="Wheat"
+                                            CornerRadius="8"
+                                            HeightRequest="25"
+                                            WidthRequest="25"/>
+                                    </FlexLayout>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                
+                <!--Faded colored backgrund View-->
+                <BoxView 
+                    HorizontalOptions="Fill"
+                    IsVisible="{Binding IsLoading}"
+                    VerticalOptions="Fill"
+                    Color="Wheat"
+                    Opacity="0.5"/>
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                   HeightRequest="25"
+                                   WidthRequest="25"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"
+                                   Color="Maroon"/>
+            </Grid>
         </Grid>
+         
         <Grid Grid.Column="1" BackgroundColor="Wheat">
-            <Label Text=" Current Order Items"/>
+            <VerticalStackLayout>
+                <Label Text=" Current Order Items"/>
+
+                <controls:CurrentDateTimeControl/>
+
+            </VerticalStackLayout>
         </Grid>
     </Grid>
 

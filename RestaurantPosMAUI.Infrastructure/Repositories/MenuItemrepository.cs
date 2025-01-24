@@ -1,4 +1,5 @@
-﻿using RestaurantPosMAUI.Domain.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantPosMAUI.Domain.Models;
 using RestaurantPosMAUI.Infrastructure.InterfaceRepositories;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,17 @@ namespace RestaurantPosMAUI.Infrastructure.Repositories
     {
         public MenuItemrepository(AppDBContext context) : base (context)
         {
+
+
             
+        }
+
+        public async Task<IEnumerable<MenuItem>> GetMenuItemsByMenuCategoryIdAsync(int menuCategoryId)
+        {
+            return await _context.MenuItemCategoriesMapping
+                .Where(mapping => mapping.MenuCategoryId == menuCategoryId)
+                .Select(mapping => mapping.MenuItem)
+                .ToListAsync();
         }
     }
 }

@@ -16,9 +16,10 @@ namespace RestaurantPosMAUI.Services
             _apiService = new ApiService();
         }
 
-        public async Task<List<MenuCategory>> GetMenuCategoriesAsync()
+        public async Task<MenuCategory[]> GetMenuCategoriesAsync()
         {
-            return await _apiService.GetAsync<MenuCategory>("GetAllMenuCategory");
+            var categories = await _apiService.GetAsync<MenuCategory>("GetAllMenuCategory");
+            return categories.ToArray();
         }
     }
 

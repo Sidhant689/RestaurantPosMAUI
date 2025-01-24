@@ -21,6 +21,10 @@ namespace RestaurantPosMAUI
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
+
+            builder.Services.AddTransient<HomeViewModel>();
+            builder.Services.AddTransient<MainPage>();
+
             return builder.Build();
         }
     }

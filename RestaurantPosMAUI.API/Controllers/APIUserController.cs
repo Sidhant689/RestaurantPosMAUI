@@ -31,7 +31,7 @@ namespace RestaurantPosMAUI.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/GetUserByIdAsync")]
+        [Route("api/GetUserById")]
         public async Task<ActionResult<UserDto>> GetUserById(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -41,6 +41,22 @@ namespace RestaurantPosMAUI.API.Controllers
             }
 
             return Ok(user);
+        }
+
+        [HttpGet]
+        [Route("api/DeleteUser")]
+        public async Task<ActionResult> DeleteUser(int id)
+        {
+            await _userService.DeleteUserAsync(id);
+            return NoContent();
+        }
+
+        [HttpGet]
+        [Route("api/GetAllUser")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUser()
+        {
+            var users = await _userService.GetAllUserAsync();
+            return Ok(users);
         }
     }
 }

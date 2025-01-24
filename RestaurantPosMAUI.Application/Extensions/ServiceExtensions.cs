@@ -33,6 +33,7 @@ namespace RestaurantPosMAUI.Application.Extensions
             //Add Services
             services.AddScoped<IUserService,UserService>();
             services.AddScoped<IMenuCategoryService,MenuCategoryservice>();
+            services.AddScoped<IMenuItemService, MenuItemService>();
         }
     }
 }

@@ -11,5 +11,7 @@ namespace RestaurantPosMAUI.Application.Interfaces
     {
         Task<UserDto> CreateUserAsync(UserDto createUserDto);
         Task<UserDto> GetUserByIdAsync(int id);
+        Task DeleteUserAsync(int id);
+        Task<IEnumerable<UserDto>> GetAllUserAsync();
     }
 }

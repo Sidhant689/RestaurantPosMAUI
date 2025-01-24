@@ -25,5 +25,37 @@ namespace RestaurantPosMAUI.API.Controllers
             var data = await _menuCategoryService.GetAllMenuCategoryasync();
             return Ok (data);
         }
+        [HttpGet]
+        [Route("api/GetCategoryById")]
+        public async Task<ActionResult<MenuCategoryDTO>> GetCategoryById(int Id)
+        {
+            var data = await _menuCategoryService.GetCategoryByIdAsync(Id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok (data);
+        }
+
+        [HttpDelete]
+        [Route("api/DeleteCategory")]
+        public async Task<ActionResult> DeleteCategory(int Id)
+        {
+            _menuCategoryService.DeleteCategoryAsync(Id);
+            return NoContent();
+        }
+
+        [HttpPost]
+        [Route("api/CreateCategory")]
+        public async Task<int> CreateCategory(MenuCategoryDTO category)
+        {
+            if (!ModelState.IsValid)
+            {
+                return 0;
+            }
+
+            var createdCategory = await _menuCategoryService.CreateCategoryAsync(category);
+            return createdCategory;
+        }
     }
 }

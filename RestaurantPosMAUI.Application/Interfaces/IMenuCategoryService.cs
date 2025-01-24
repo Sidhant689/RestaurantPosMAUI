@@ -10,5 +10,8 @@ namespace RestaurantPosMAUI.Application.Interfaces
     public interface IMenuCategoryService
     {
         Task<IEnumerable<MenuCategoryDTO>> GetAllMenuCategoryasync();
+        Task<MenuCategoryDTO> GetCategoryByIdAsync(int Id);
+        Task DeleteCategoryAsync(int Id);
+        Task<int> CreateCategoryAsync(MenuCategoryDTO category);
     }
 }

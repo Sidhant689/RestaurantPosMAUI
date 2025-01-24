@@ -81,5 +81,21 @@ namespace RestaurantPosMAUI.Application.Services
             var user = await _unitOfWork.Users.GetByIdAsync(id);
             return _mapper.Map<UserDto>(user);
         }
+
+        public async Task<IEnumerable<UserDto>> GetAllUserAsync()
+        {
+            var users = await _unitOfWork.Users.GetAllAsync();
+            return _mapper.Map<IEnumerable<UserDto>>(users);
+        }
+
+        public async Task DeleteUserAsync(int id)
+        {
+            var user = await _unitOfWork.Users.GetByIdAsync(id);
+            if(user != null)
+            {
+                _unitOfWork.Users.DeleteAsync(user);
+                await _unitOfWork.CompleteAsync(id.ToString(),"DeleteUserAsync");
+            }
+        }
     }
 }
